@@ -90,6 +90,16 @@ https_tunnel_response(CONN *C)
   }
 }
 
+
+
+
+static void range_create(char * range_str)
+{
+  unsigned int  range_block = 32*1024;
+  unsigned int start_pos = abs(rand()*rand()%67076096);//64MB-32KB
+  sprintf(range_str,"Range:bytes=%d-%d",start_pos,start_pos+range_block);
+}
+extern int g_range_create_enable;
 /**
  * returns int, ( < 0 == error )
  * formats and sends an HTTP/1.0 request
@@ -150,6 +160,10 @@ http_get(CONN *C, URL *U)
     );
   }
 
+  char range_str[256] = {0};
+  if (g_range_create_enable) {
+      range_create(range_str);
+  }
   /** 
    * build a request string to pass to the server       
    */
@@ -165,6 +179,7 @@ http_get(CONN *C, URL *U)
     "Accept: */*\015\012"                  /*             */
     "Accept-Encoding: %s\015\012"          /* my.encoding */
     "User-Agent: %s\015\012"               /* my uagent   */
+    "%s\015\012"                            /* range string*/
     "%s"                                   /* my.extra    */
     "Connection: %s\015\012\015\012",      /* keepalive   */
     fullpath, protocol, U->hostname, portstr,
@@ -173,7 +188,7 @@ http_get(CONN *C, URL *U)
     (strlen(cookie) > 8)?cookie:"", 
     (ifmod!=NULL)?ifmod:"",
     (ifnon!=NULL)?ifnon:"",
-    my.encoding, my.uagent, my.extra, keepalive 
+    my.encoding, my.uagent,range_str, my.extra, keepalive 
   );
  
   if(my.debug || my.get){ printf("%s\n", request); fflush(stdout); }

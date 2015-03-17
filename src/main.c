@@ -147,6 +147,7 @@ display_help()
   puts("                          to simulate human activity. Default value is 3" );
   puts("  -H, --header=\"text\"     Add a header to request (can be many)" ); 
   puts("  -A, --user-agent=\"text\" Sets User-Agent in request" ); 
+  puts("  -a, auto create the range header param ,size 32*1024 bytes");
   /**
    * our work is done, exit nicely
    */
@@ -173,6 +174,7 @@ parse_rc_cmdline(int argc, char *argv[])
   }
   optind = 0;
 } 
+int g_range_create_enable = 0;
 
 /**
  * parses command line arguments and assigns
@@ -184,7 +186,7 @@ parse_cmdline(int argc, char *argv[])
 {
   int c = 0;
   int nargs;
-  while((c = getopt_long( argc, argv, "VhvCDglibr:t:f:d:c:u:m:H:R:A:", 
+  while((c = getopt_long( argc, argv, "VhvCDglibr:t:f:d:c:u:m:H:R:A:a", 
           long_options, (int *)0)) != EOF){
   switch(c){
       case 'V':
@@ -262,6 +264,11 @@ parse_cmdline(int argc, char *argv[])
           strcat(my.extra,"\015\012");
         }
         break; 
+      case 'a':
+          {
+              g_range_create_enable = 1;
+          }
+       break;
 
     } /* end of switch( c )           */
   }   /* end of while c = getopt_long */
