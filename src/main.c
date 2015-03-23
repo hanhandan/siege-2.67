@@ -495,9 +495,9 @@ main(int argc, char *argv[])
   for(x=0;x<n;x++)
   {
       printf("clien [%d] 's value is %6.2f \n",x,client[x].time);
-      b+=((float)client[x].time-ave)*((float)client[x].time-ave);
+      b+=(client[x].time-ave)*(client[x].time-ave);
   }
-  b = (float)(b/(float)n);
+  b = (float)(b/n);
   data_set_varp(D,b);
   /**
    * cleanup crew
