@@ -268,9 +268,8 @@ parse_cmdline(int argc, char *argv[])
           {
               g_range_create_enable = 1;
               g_range_block = atoi(optarg);
-              if (32 < g_range_block) {
+              if (32 > g_range_block) {
                   g_range_block = 32;
-                  joe_fatal("The range size has been set to 32");
               }
           }
        break;
@@ -559,7 +558,5 @@ main(int argc, char *argv[])
   }  
 
   exit(EXIT_SUCCESS);	
-} /* end of int main **/
-
-
+} /* end of int main **/˜
 
