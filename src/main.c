@@ -270,7 +270,6 @@ parse_cmdline(int argc, char *argv[])
               g_range_block = atoi(optarg);
               if (32 > g_range_block) {
                   g_range_block = 32;
-                  joe_fatal("The range size has been set to 32");
               }
           }
        break;
@@ -489,10 +488,11 @@ main(int argc, char *argv[])
    * caculate the variance value
    */
   float ave=(float)data_get_total(D)/data_get_count(D);
+   
   float b = 0.0;
-  int n = data_get_code(D);
-            for(x=0;x<n;x++)
-                  b+=((float)client[x].time-ave)*((float)client[x].time-ave);
+  int n = data_get_count(D);
+  for(x=0;x<n;x++)
+        b+=((float)client[x].time-ave)*((float)client[x].time-ave);
   b = (float)(b/(float)n);
   data_set_varp(D,b);
   /**

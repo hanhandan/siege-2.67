@@ -347,6 +347,7 @@ http_request(CONN *C, URL *U, CLIENT *client)
   /**
    * verbose output, print statistics to stdout
    */
+#if 0
   if((my.verbose && !my.get) && (!my.debug)){
     if(my.csv){
       if(my.display)
@@ -372,7 +373,7 @@ http_request(CONN *C, URL *U, CLIENT *client)
         );
     } /* else not my.csv */
   }
-
+#endif
   /**
    * close the socket and free memory.
    */
