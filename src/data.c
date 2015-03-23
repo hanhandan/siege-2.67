@@ -36,6 +36,7 @@ struct DATA_T
   unsigned int  ok200;
   unsigned int  fail;
   unsigned long long bytes;
+  float    varp;
 };
 
 DATA
@@ -53,6 +54,7 @@ new_data()
   this->highest   = 0.0;
   this->elapsed   = 0.0;
   this->bytes     = 0.0;
+  this->varp      = 0.0;
   return this;
 }
 
@@ -125,6 +127,15 @@ data_set_highest(DATA this, float highest)
   if(this->highest < highest){
     this->highest = highest;
   }
+  return;
+}
+
+void
+data_set_varp(DATA this, float varp)
+{
+  
+  this->varp = varp;
+
   return;
 }
 
@@ -246,3 +257,9 @@ data_get_concurrency(DATA this)
   return this->total / this->elapsed;
 }
 
+
+float
+data_get_varp(DATA this)
+{
+  return this->varp;
+}

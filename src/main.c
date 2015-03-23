@@ -166,7 +166,7 @@ parse_rc_cmdline(int argc, char *argv[])
   strcpy(my.rc, "");
   
   while( a > -1 ){
-    a = getopt_long(argc, argv, "VhvCDglibr:t:f:d:c:u:m:H:R:A:", long_options, (int*)0);
+    a = getopt_long(argc, argv, "VhvCDglibr:t:f:d:c:u:m:H:R:A:a:", long_options, (int*)0);
     if(a == 'R'){
       strcpy(my.rc, optarg);
       a = -1;
@@ -175,7 +175,7 @@ parse_rc_cmdline(int argc, char *argv[])
   optind = 0;
 } 
 int g_range_create_enable = 0;
-
+int g_range_block = 32;
 /**
  * parses command line arguments and assigns
  * values to run time variables. relies on GNU
@@ -186,7 +186,7 @@ parse_cmdline(int argc, char *argv[])
 {
   int c = 0;
   int nargs;
-  while((c = getopt_long( argc, argv, "VhvCDglibr:t:f:d:c:u:m:H:R:A:a", 
+  while((c = getopt_long( argc, argv, "VhvCDglibr:t:f:d:c:u:m:H:R:A:a:", 
           long_options, (int *)0)) != EOF){
   switch(c){
       case 'V':
@@ -267,6 +267,11 @@ parse_cmdline(int argc, char *argv[])
       case 'a':
           {
               g_range_create_enable = 1;
+              g_range_block = atoi(optarg);
+              if (32 < g_range_block) {
+                  g_range_block = 32;
+                  joe_fatal("The range size has been set to 32");
+              }
           }
        break;
 
@@ -474,11 +479,22 @@ main(int argc, char *argv[])
     client[x].rand_r_SEED = pthread_rand_np(&randrseed);
   } /* end of stats accumulation */
   
+  
   /**
    * record stop time
    */
   data_set_stop(D);
 
+  /**
+   * caculate the variance value
+   */
+  float ave=(float)data_get_total(D)/data_get_count(D);
+  float b = 0.0;
+  int n = data_get_code(D);
+            for(x=0;x<n;x++)
+                  b+=((float)client[x].time-ave)*((float)client[x].time-ave);
+  b = (float)(b/(float)n);
+  data_set_varp(D,b);
   /**
    * cleanup crew
    */ 
@@ -529,6 +545,7 @@ main(int argc, char *argv[])
   fprintf(stderr, "Failed transactions:\t%12u\n",          my.failed);
   fprintf(stderr, "Longest transaction:\t%12.2f\n",        data_get_highest(D));
   fprintf(stderr, "Shortest transaction:\t%12.2f\n",       data_get_lowest(D));
+  fprintf(stderr, " Variance:\t%12.2f\n",       data_get_varp(D));
   fprintf(stderr, " \n");
   if(my.mark)    mark_log_file(my.markstr);
   if(my.logging) log_transaction(D);

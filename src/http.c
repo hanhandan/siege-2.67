@@ -92,10 +92,10 @@ https_tunnel_response(CONN *C)
 
 
 
-
+extern int g_range_block;
 static void range_create(char * range_str)
 {
-  unsigned int  range_block = 32*1024;
+  unsigned int  range_block = g_range_block*1024;
   unsigned int start_pos = abs(rand()*rand()%67076096);//64MB-32KB
   sprintf(range_str,"Range:bytes=%d-%d",start_pos,start_pos+range_block);
 }
