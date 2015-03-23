@@ -487,12 +487,16 @@ main(int argc, char *argv[])
   /**
    * caculate the variance value
    */
-  float ave=(float)data_get_total(D)/data_get_count(D);
+    float ave=(float)data_get_total(D)/data_get_count(D);
+    printf(">>>>> %6.2f,%6.2f\n",ave,data_get_response_time(D));
    
   float b = 0.0;
   int n = data_get_count(D);
   for(x=0;x<n;x++)
-        b+=((float)client[x].time-ave)*((float)client[x].time-ave);
+  {
+      printf("clien [%d] 's value is %6.2f \n",x,client[x].time);
+      b+=((float)client[x].time-ave)*((float)client[x].time-ave);
+  }
   b = (float)(b/(float)n);
   data_set_varp(D,b);
   /**
