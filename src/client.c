@@ -42,7 +42,7 @@
  */
 private BOOLEAN http_request(CONN *C, URL *U, CLIENT *c);
 private void increment_failures();
-
+extern void data_test_store_time(float etime);
 #ifdef  SIGNAL_CLIENT_PLATFORM
 static void signal_handler( int i );
 static void signal_init();
@@ -331,7 +331,7 @@ http_request(CONN *C, URL *U, CLIENT *client)
   if(head->code == 200){
     client->ok200++;
   }
-
+  data_test_store_time(etime);
   /**
    * check to see if this transaction is the longest or shortest
    */

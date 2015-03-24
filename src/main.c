@@ -78,6 +78,7 @@ static struct option long_options[] =
   { "user-agent", required_argument, NULL, 'A' }
 };
 
+extern float data_test_get_var();
 /**
  * display_version   
  * displays the version number and exits on boolean false. 
@@ -483,22 +484,8 @@ main(int argc, char *argv[])
    * record stop time
    */
   data_set_stop(D);
-
-  /**
-   * caculate the variance value
-   */
-    float ave=(float)data_get_total(D)/data_get_count(D);
-    printf(">>>>> %6.2f,%6.2f\n",ave,data_get_response_time(D));
    
-  float b = 0.0;
-  int n = data_get_count(D);
-  for(x=0;x<n;x++)
-  {
-      printf("clien [%d] 's value is %6.2f \n",x,client[x].time);
-      b+=(client[x].time-ave)*(client[x].time-ave);
-  }
-  b = (float)(b/n);
-  data_set_varp(D,b);
+  float b = data_test_get_var();
   /**
    * cleanup crew
    */ 
@@ -547,9 +534,9 @@ main(int argc, char *argv[])
     fprintf(stderr, "HTTP OK received:\t%12u\n",             data_get_ok200(D));
   }
   fprintf(stderr, "Failed transactions:\t%12u\n",          my.failed);
-  fprintf(stderr, "Longest transaction:\t%12.2f\n",        data_get_highest(D));
-  fprintf(stderr, "Shortest transaction:\t%12.2f\n",       data_get_lowest(D));
-  fprintf(stderr, " Variance:\t%12.2f\n",       data_get_varp(D));
+  fprintf(stderr, "Longest transaction:\t%12.6f\n",        data_get_highest(D));
+  fprintf(stderr, "Shortest transaction:\t%12.6f\n",       data_get_lowest(D));
+  fprintf(stderr, " Variance:\t%12.6f\n",       b);
   fprintf(stderr, " \n");
   if(my.mark)    mark_log_file(my.markstr);
   if(my.logging) log_transaction(D);

@@ -263,3 +263,36 @@ data_get_varp(DATA this)
 {
   return this->varp;
 }
+
+static int rep_cnt = 0;
+float test_data[60000] = {0};
+void data_test_store_time(float etime)
+{
+    test_data[rep_cnt] = etime;
+    rep_cnt++;
+}
+
+float data_test_get_avg(void)
+{
+    float value = 0.0;
+    float total = 0.0;
+    int i;
+    for (i=0;i<rep_cnt;i++)
+       total += test_data[i];
+    
+    value =(float)(total/rep_cnt);
+    return value;
+}
+
+float data_test_get_var(void)
+{
+    int i;
+    float var = 0.0;
+    float avg = data_test_get_avg();
+    for (i=0;i<rep_cnt;i++)
+    {
+        var += (test_data[i] - avg)*(test_data[i] - avg);
+    }
+    var = var/rep_cnt;
+    return var;
+}
