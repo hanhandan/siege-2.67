@@ -339,7 +339,8 @@ http_request(CONN *C, URL *U, CLIENT *client)
     highmark = etime;
   }
   if ( ( lowmark < 0 ) || ( etime < lowmark ) ) {
-    lowmark = etime;
+      if (0!= etime)
+          lowmark = etime;
   }
   client->bigtime = highmark;
   client->smalltime = lowmark;
