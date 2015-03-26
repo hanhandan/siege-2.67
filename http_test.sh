@@ -83,7 +83,6 @@ done
 echo "creating url file ... "
 create_url_file $TEST_URL_NUMBER  $SSD_PERCENT
 echo "create url file over"
-exit 0
 
 if [ "$TEST_ONCE" == "1" ];then 
     echo "siege -r 1 -c $TEST_USER_NUMBER -a $TEST_RANGE_SIZE -i -f $URL_FILE"
